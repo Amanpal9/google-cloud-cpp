@@ -1,0 +1,22 @@
+name: Codex generator test
+
+on:
+  push:
+    branches: [codex-generator-test]
+
+permissions:
+  contents: read
+
+jobs:
+  scaffold-generator:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Run scaffold generator unit test
+        run: |
+          curl -fsSL --retry 3 https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 -o bazelisk
+          chmod +x bazelisk
+          ./bazelisk test //generator:internal_scaffold_generator_test --test_output=errors
